@@ -525,28 +525,8 @@ typedef struct {
 } ngx_naxsi_log_t;
 
 
-#if (NGX_HAVE_C99_VARIADIC_MACROS)
-#define NGX_HAVE_VARIADIC_MACROS  1
-
 void ngx_log_naxsi(ngx_uint_t level, ngx_http_request_t *r, ngx_err_t err,
     const char *fmt, ...);
-
-#elif (NGX_HAVE_GCC_VARIADIC_MACROS)
-
-#define NGX_HAVE_VARIADIC_MACROS  1
-void
-ngx_log_naxsi(ngx_uint_t level, ngx_http_request_t *r, ngx_err_t err,
-    const char *fmt, ...);
-
-#else /* NO VARIADIC MACROS */
-
-#define NGX_HAVE_VARIADIC_MACROS  0
-void ngx_cdecl ngx_log_naxsi(ngx_uint_t level, ngx_http_request_t *r, ngx_err_t err,
-    const char *fmt, va_list args);
-
-#endif /* VARIADIC MACROS */
-
-
 
 #endif
 

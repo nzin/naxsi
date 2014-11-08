@@ -221,19 +221,11 @@ static ngx_str_t err_levels[] = {
  * - if not, it will redirect logs to nginx log error
  * - if it exist, it will append to the log files
  */
-#if (NGX_HAVE_VARIADIC_MACROS)
 void
 ngx_log_naxsi(ngx_uint_t level, ngx_http_request_t *r, ngx_err_t err,
     const char *fmt, ...)
-#else
-void
-ngx_log_naxsi(ngx_uint_t level, ngx_http_request_t *r, ngx_err_t err,
-    const char *fmt, va_list args)
-#endif
 {
-#if (NGX_HAVE_VARIADIC_MACROS)
     va_list  args;
-#endif
     ngx_http_dummy_loc_conf_t  *loc;
     ngx_http_dummy_main_conf_t *main_cf;
     u_char                     *p, *last;
@@ -253,15 +245,11 @@ ngx_log_naxsi(ngx_uint_t level, ngx_http_request_t *r, ngx_err_t err,
     
     if ((loc->naxsi_logs==NULL || loc->naxsi_logs->nelts == 0) && (main_cf->naxsi_logs==NULL || main_cf->naxsi_logs->nelts == 0 )) {
 
-#if (NGX_HAVE_VARIADIC_MACROS)
       va_start(args, fmt);
       p = ngx_vslprintf(errstr, last, fmt, args);
       *p='\0';
       ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, (const char *)errstr); 
       va_end(args);
-#else
-      ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, fmt, args); 
-#endif
       return;
     }
 
@@ -283,17 +271,10 @@ ngx_log_naxsi(ngx_uint_t level, ngx_http_request_t *r, ngx_err_t err,
 //      }
       p = ngx_slprintf(p, last, "*%uA ", r->connection->number);
     }
-#if (NGX_HAVE_VARIADIC_MACROS)
 
     va_start(args, fmt);
     p = ngx_vslprintf(p, last, fmt, args);
     va_end(args);
-
-#else
-
-    p = ngx_vslprintf(p, last, fmt, args);
-
-#endif
 
     if (err) {
         p = ngx_log_errno(p, last, err);
